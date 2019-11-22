@@ -1,0 +1,22 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "no-var-requires": false,
+        "quotemark": [
+            true,
+            "single",
+            "jsx-double"
+        ],
+        "interface-name": [
+            false,
+            "never-prefix"
+        ],
+        "radix": false,
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn"
+    }
+}

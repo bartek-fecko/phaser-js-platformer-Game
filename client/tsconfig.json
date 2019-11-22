@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "outDir": "./build/",
+        "sourceMap": true,
+        "noImplicitAny": false,
+        "module": "commonjs",
+        "target": "es6",
+        "jsx": "react",
+        "lib": [
+            "es5",
+            "es6",
+            "dom",
+            "dom.iterable",
+            "esnext",
+        ],
+        "baseUrl": "./",
+        "paths": {
+            "#/*": [
+                "./src/*"
+            ],
+            "assets/*": [
+                "./src/assets/*"
+            ]
+        }
+    },
+    "include": [
+        "./src/**/*",
+        "./node_modules/@types/**/*.d.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "platforms",
+        "www"
+    ]
+}
