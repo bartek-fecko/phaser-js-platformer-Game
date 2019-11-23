@@ -1,58 +1,60 @@
 import { dimensions, SceneNames } from '#/config/gameConfig';
-// tslint:disable: object-literal-sort-keys
-import * as bomb from 'assets/bomb.png';
-import * as dude from 'assets/dude.png';
-import * as platform from 'assets/platform.png';
-import * as sky from 'assets/sky.png';
-import * as star from 'assets/star.png';
 import * as Phaser from 'phaser';
-const { width, height } = dimensions;
+import { assets } from './assetsConstants';
 
-const assets = {
-   sky: {
-      name: 'sky',
-      data: sky,
-   },
-   star: {
-      name: 'star',
-      data: star,
-   },
-   platform: {
-      name: 'platform',
-      data: platform,
-   },
-   bomb: {
-      name: 'bomb',
-      data: bomb,
-   },
-   dude: {
-      name: 'dude',
-      data: dude,
-   },
-};
-
+const { width: gameWidth, height: gameHeight } = dimensions;
+//this.player.alpha = .1 change alpha opacity
 export class GameScene extends Phaser.Scene {
    private platforms;
+   private cursors;
+   private player;
+
    constructor() {
       super({ key: SceneNames.Game });
    }
+
    public preload() {
-      this.load.image(assets.sky.name, assets.sky.data);
-      this.load.image(assets.star.name, assets.star.data);
-      this.load.image(assets.platform.name, assets.platform.data);
+
+      this.load.spritesheet(
+         assets.player.name,
+         assets.player.data,
+         {
+            frameHeight: assets.player.frameHeight,
+            frameWidth: assets.player.frameWidth,
+         },
+      );
+      this.load.image(assets.skyMap.name, assets.skyMap.data);
+      this.load.image(assets.terrainMap.name, assets.terrainMap.data);
+      this.load.tilemapTiledJSON(assets.mapTile.name, assets.mapTile.data as unknown as string);
    }
 
    public create() {
-      this.add.image(width / 2, height / 2, assets.sky.name);
-      this.platforms = this.physics.add.staticGroup();
+      const tileMap = this.add.tilemap(assets.mapTile.name);
+      const skyMap = tileMap.addTilesetImage('sky', assets.skyMap.name);
+      const terrainMap = tileMap.addTilesetImage('gameTile', assets.terrainMap.name);
 
-      this.platforms.create(400, 568, assets.platform.name).setScale(2).refreshBody();
+      const skyLayer = tileMap.createStaticLayer('background', [skyMap], 0, 0).setScale(2.5);
+      const terrainLayer = tileMap.createStaticLayer('terrain', [terrainMap], 0, 0).setScale(2.5);
+      const treesLayer = tileMap.createStaticLayer('trees', [terrainMap], 0, 0).setScale(2.5);
 
-      this.platforms.create(600, 400, assets.platform.name);
-      this.platforms.create(50, 250, assets.platform.name);
-      this.platforms.create(750, 220, assets.platform.name);
+      this.player = this.physics.add.sprite(20, gameHeight - 64 * 2 - 20, assets.player.name).setScale(2);
+      this.player.setBounce(0.2);
+      this.player.setCollideWorldBounds(true);
+      this.anims.create({
+         frameRate: 10,
+         frames: this.anims.generateFrameNumbers(assets.player.name, { start: 0, end: 3 }),
+         key: 'left',
+         repeat: -1,
+      });
+      this.cursors = this.input.keyboard.createCursorKeys();
+
    }
    public update() {
-
+      if (this.cursors.left.isDown) {
+         this.player.scaleX = -2;
+      }
+      else {
+         this.player.scaleX = 2;
+      }
    }
 }

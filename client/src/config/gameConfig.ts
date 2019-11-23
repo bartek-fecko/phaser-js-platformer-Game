@@ -1,7 +1,7 @@
 
 export const dimensions = {
    height: 600,
-   width: 800,
+   width: 900,
 };
 
 export enum SceneNames {

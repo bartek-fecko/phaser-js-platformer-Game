@@ -7,11 +7,23 @@ export class MenuScene extends Phaser.Scene {
          key: SceneNames.Menu,
       });
    }
-   init(data) {
-      console.log(data)
-   }
-   create() {
-      this.add.text(100, 64, 'Hello World', {font:"30px mainFont", fill:"#FFFFFF"})
+   public init(data) {
 
+   }
+
+   public create() {
+      const text = this.add.text(
+         this.game.renderer.width / 2 - 50,
+         this.game.renderer.height / 2 - 50,
+         'Play game',
+         {
+            fill: '#FFFFFF',
+            font: '30px mainFont',
+         },
+      );
+      text.setInteractive();
+      text.on('pointerdown', () => (
+         this.scene.start(SceneNames.Game, { data: 'from menu' })
+      ));
    }
 }

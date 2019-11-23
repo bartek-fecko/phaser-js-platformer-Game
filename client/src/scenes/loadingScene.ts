@@ -7,12 +7,23 @@ export class LoadingScene extends Phaser.Scene {
          key: SceneNames.Loading,
       });
    }
-   preload() {
-
+   public preload() {
+      const loadingBar = this.add.graphics({
+         fillStyle: {
+            color: 0xffffff,
+         },
+      });
+      this.load.on('progress', (percent: number) => {
+         loadingBar.fillRect(
+            20,
+            this.game.renderer.height / 2,
+            this.game.renderer.width * percent,
+            50,
+         );
+      });
    }
-   create() {
+
+   public create() {
       this.scene.start(SceneNames.Menu, { data: 'from loading' });
-      this.add.text(100, 64, 'Hello World', {font:"20px mainFont", fill:"#FFFFFF"})
-      console.log('yes')
    }
 }
