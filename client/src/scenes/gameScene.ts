@@ -53,7 +53,10 @@ export class GameScene extends Phaser.Scene {
       );
       this.player.create();
       this.physics.add.collider(this.player, terrainLayer);
+      this.cameras.main.setBounds(0, 0, tileMap.widthInPixels, 0);
+      this.cameras.main.startFollow(this.player);
 
+      this.physics.world.setBounds(0, 0, tileMap.widthInPixels, tileMap.heightInPixels);
    }
 
    public update() {
