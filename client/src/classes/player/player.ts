@@ -20,7 +20,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
    }
 
    public create() {
-      // this.setBounce(0.2);
+      this.setGravity(0, 800);
       this.setCollideWorldBounds(true);
       this.scene.anims.create({
          frameRate: 10,
@@ -34,8 +34,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
          key: 'stand',
          repeat: -1,
       });
-      this.setGravity(300);
-      this.setOffset(15, 15);
    }
 
    public update() {
@@ -55,8 +53,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
          this.setOffset(15, 10);
          this.setVelocityX(0);
       }
-      if (this.cursors.up.isDown && this.body.touching.down) {
-         this.setVelocityY(-1200);
+      if (
+         this.cursors.up.isDown && this.body.deltaY() > 0 &&
+         (this.body as Phaser.Physics.Arcade.Body).onFloor()
+      ) {
+         this.setVelocityX(0);
+         this.setVelocityY(-330);
       }
    }
 }

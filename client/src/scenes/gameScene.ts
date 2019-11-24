@@ -6,7 +6,6 @@ import { assets } from './constants';
 const { width: gameWidth, height: gameHeight } = dimensions;
 //this.player.alpha = .1 change alpha opacity
 export class GameScene extends Phaser.Scene {
-   private platforms;
    private player: Player;
 
    constructor() {
@@ -44,7 +43,7 @@ export class GameScene extends Phaser.Scene {
       const terrainLayer = tileMap.createStaticLayer('terrain', [terrainMap], 0, 0).setScale(2.5);
       const treesLayer = tileMap.createStaticLayer('trees', [terrainMap], 0, 0).setScale(2.5);
 
-      terrainLayer.setCollisionByProperty({ collides: true });
+      terrainLayer.setCollisionByProperty({ collisions: true });
 
       this.player = new Player(
          this,
