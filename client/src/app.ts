@@ -13,7 +13,7 @@ class KacpGame extends Phaser.Game {
 
 const config = {
    title: 'KacpGame',
-   // type: Phaser.AUTO,
+   type: Phaser.AUTO,
    width: dimensions.width,
    height: dimensions.height,
    parent: 'game',
@@ -23,9 +23,8 @@ const config = {
    },
    physics: {
       default: 'arcade',
-      gravity: { y: 300 },
       arcade: {
-         debug: false,
+         debug: true,
       },
    },
 };

@@ -1,26 +1,33 @@
+import { Player } from '#/classes/player/player';
 import { dimensions, SceneNames } from '#/config/gameConfig';
 import * as Phaser from 'phaser';
-import { assets } from './assetsConstants';
+import { assets } from './constants';
 
 const { width: gameWidth, height: gameHeight } = dimensions;
 //this.player.alpha = .1 change alpha opacity
 export class GameScene extends Phaser.Scene {
    private platforms;
-   private cursors;
-   private player;
+   private player: Player;
 
    constructor() {
       super({ key: SceneNames.Game });
    }
 
    public preload() {
-
       this.load.spritesheet(
-         assets.player.name,
-         assets.player.data,
+         assets.playerStand.name,
+         assets.playerStand.data,
          {
-            frameHeight: assets.player.frameHeight,
-            frameWidth: assets.player.frameWidth,
+            frameHeight: assets.playerStand.frameHeight,
+            frameWidth: assets.playerStand.frameWidth,
+         },
+      );
+      this.load.spritesheet(
+         assets.playerRun.name,
+         assets.playerRun.data,
+         {
+            frameHeight: assets.playerRun.frameHeight,
+            frameWidth: assets.playerRun.frameWidth,
          },
       );
       this.load.image(assets.skyMap.name, assets.skyMap.data);
@@ -37,24 +44,20 @@ export class GameScene extends Phaser.Scene {
       const terrainLayer = tileMap.createStaticLayer('terrain', [terrainMap], 0, 0).setScale(2.5);
       const treesLayer = tileMap.createStaticLayer('trees', [terrainMap], 0, 0).setScale(2.5);
 
-      this.player = this.physics.add.sprite(20, gameHeight - 64 * 2 - 20, assets.player.name).setScale(2);
-      this.player.setBounce(0.2);
-      this.player.setCollideWorldBounds(true);
-      this.anims.create({
-         frameRate: 10,
-         frames: this.anims.generateFrameNumbers(assets.player.name, { start: 0, end: 3 }),
-         key: 'left',
-         repeat: -1,
-      });
-      this.cursors = this.input.keyboard.createCursorKeys();
+      terrainLayer.setCollisionByProperty({ collides: true });
+
+      this.player = new Player(
+         this,
+         20,
+         gameHeight - assets.tileBox.width * 2 - 20,
+         assets.playerStand.name,
+      );
+      this.player.create();
+      this.physics.add.collider(this.player, terrainLayer);
 
    }
+
    public update() {
-      if (this.cursors.left.isDown) {
-         this.player.scaleX = -2;
-      }
-      else {
-         this.player.scaleX = 2;
-      }
+      this.player.update();
    }
 }
