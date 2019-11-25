@@ -8,4 +8,5 @@ export enum SceneNames {
    Game = 'Game',
    Menu = 'Menu',
    Loading = 'Loading',
+   Ui = 'Ui',
 }

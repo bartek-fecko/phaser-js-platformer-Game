@@ -26,6 +26,6 @@ export class LoadingScene extends Phaser.Scene {
    public create() {
       // this.scene.start(SceneNames.Menu, { data: 'from loading' });
       this.scene.start(SceneNames.Game, { data: 'from loading' });
-
+      this.scene.start(SceneNames.Ui);
    }
 }

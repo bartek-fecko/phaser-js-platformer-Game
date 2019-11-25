@@ -2,6 +2,7 @@ import { Player } from '#/classes/player/player';
 import { dimensions, SceneNames } from '#/config/gameConfig';
 import * as Phaser from 'phaser';
 import { assets } from './constants';
+import {assets as playerAssets} from '#/classes/player/constants';
 
 const { width: gameWidth, height: gameHeight } = dimensions;
 //this.player.alpha = .1 change alpha opacity
@@ -14,19 +15,27 @@ export class GameScene extends Phaser.Scene {
 
    public preload() {
       this.load.spritesheet(
-         assets.playerStand.name,
-         assets.playerStand.data,
+         playerAssets.playerStand.name,
+         playerAssets.playerStand.data,
          {
-            frameHeight: assets.playerStand.frameHeight,
-            frameWidth: assets.playerStand.frameWidth,
+            frameHeight: playerAssets.playerStand.frameHeight,
+            frameWidth: playerAssets.playerStand.frameWidth,
          },
       );
       this.load.spritesheet(
-         assets.playerRun.name,
-         assets.playerRun.data,
+         playerAssets.playerRun.name,
+         playerAssets.playerRun.data,
          {
-            frameHeight: assets.playerRun.frameHeight,
-            frameWidth: assets.playerRun.frameWidth,
+            frameHeight: playerAssets.playerRun.frameHeight,
+            frameWidth: playerAssets.playerRun.frameWidth,
+         },
+      );
+      this.load.spritesheet(
+         playerAssets.playerAttack.name,
+         playerAssets.playerAttack.data,
+         {
+            frameHeight: playerAssets.playerAttack.frameHeight,
+            frameWidth: playerAssets.playerAttack.frameWidth,
          },
       );
       this.load.image(assets.skyMap.name, assets.skyMap.data);
@@ -51,15 +60,15 @@ export class GameScene extends Phaser.Scene {
       this.player = new Player(
          this,
          20,
-         gameHeight - assets.tileBox.width * 2 - 20,
-         assets.playerStand.name,
+         gameHeight - assets.tileBox.width * 2 + 20,
+         playerAssets.playerStand.name,
       );
+
       this.player.create();
       this.physics.add.collider(this.player, terrainLayer);
-      this.cameras.main.setBounds(0, 0, tileMap.widthInPixels, 0);
+      this.cameras.main.setBounds(0, 0, tileMap.widthInPixels * 2, 0);
       this.cameras.main.startFollow(this.player);
-
-      this.physics.world.setBounds(0, 0, tileMap.widthInPixels, tileMap.heightInPixels);
+      this.physics.world.setBounds(0, 0, tileMap.widthInPixels * 2, tileMap.heightInPixels);
    }
 
    public update() {

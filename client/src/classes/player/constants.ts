@@ -2,21 +2,22 @@
 // tslint:disable: object-literal-sort-keys
 import * as playerRun from 'assets/knight/noBKG_KnightRun_strip.png';
 import * as playerStand from 'assets/knight/noBKG_KnightIdle_strip.png';
+import * as playerAttack from 'assets/knight/noBKG_KnightAttack_strip.png';
 
 export const assets = {
    playerStand: {
-      name: 'player',
+      name: 'playerStand',
       data: playerStand,
       frameHeight: 64,
       frameWidth: 64,
       scale: 2,
    },
-   // playerJump: {
-   //    name: 'playerJump',
-   //    data: playerJump,
-   //    frameHeight: 64,
-   //    frameWidth: 64,
-   // },
+   playerAttack: {
+      name: 'playerAttack',
+      data: playerAttack,
+      frameHeight: 64,
+      frameWidth: 144,
+   },
    playerRun: {
       name: 'playerRun',
       data: playerRun,
@@ -26,3 +27,12 @@ export const assets = {
    },
 
 };
+
+export const playerHearts = 3;
+
+export const scale = 2;
+
+export enum Speed {
+   X = 460,
+   Y = 330,
+}
