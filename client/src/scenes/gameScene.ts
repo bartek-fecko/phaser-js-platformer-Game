@@ -30,18 +30,21 @@ export class GameScene extends Phaser.Scene {
          },
       );
       this.load.image(assets.skyMap.name, assets.skyMap.data);
-      this.load.image(assets.terrainMap.name, assets.terrainMap.data);
+      this.load.image(assets.pinkMountain.name, assets.pinkMountain.data);
+      this.load.image(assets.mainMap.name, assets.mainMap.data);
       this.load.tilemapTiledJSON(assets.mapTile.name, assets.mapTile.data as unknown as string);
    }
 
    public create() {
       const tileMap = this.add.tilemap(assets.mapTile.name);
       const skyMap = tileMap.addTilesetImage('sky', assets.skyMap.name);
-      const terrainMap = tileMap.addTilesetImage('gameTile', assets.terrainMap.name);
+      const pinkMountainMap = tileMap.addTilesetImage(assets.pinkMountain.name);
+      const terrainMap = tileMap.addTilesetImage('mainTile', assets.mainMap.name);
 
-      const skyLayer = tileMap.createStaticLayer('background', [skyMap], 0, 0).setScale(2.5);
-      const terrainLayer = tileMap.createStaticLayer('terrain', [terrainMap], 0, 0).setScale(2.5);
-      const treesLayer = tileMap.createStaticLayer('trees', [terrainMap], 0, 0).setScale(2.5);
+      const skyLayer = tileMap.createStaticLayer('sky', [skyMap], 0, 0).setScale(2);
+      const terrainLayer = tileMap.createStaticLayer('terrain', [terrainMap], 0, 0).setScale(2);
+      const farBackgroundLayer = tileMap.createStaticLayer('farBackground', [pinkMountainMap], 0, 0).setScale(2);
+      const treesLayer = tileMap.createStaticLayer('trees', [terrainMap], 0, 0).setScale(2);
 
       terrainLayer.setCollisionByProperty({ collisions: true });
 

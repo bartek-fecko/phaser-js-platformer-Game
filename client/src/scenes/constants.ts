@@ -1,10 +1,11 @@
 // tslint:disable: ordered-imports
 // tslint:disable: object-literal-sort-keys
 import * as skyMap from 'assets/maps/skyMap.png';
-import * as terrainMap from 'assets/maps/terrainMap.png';
+import * as mainMap from 'assets/maps/terrainMap.png';
 import * as playerRun from 'assets/knight/noBKG_KnightRun_strip.png';
 import * as playerStand from 'assets/knight/noBKG_KnightIdle_strip.png';
 import * as mapTile from 'assets/maps/gameTile.json';
+import * as pinkMountain from 'assets/maps/pinkMountain.png';
 
 export const assets = {
    tileBox: {
@@ -14,9 +15,13 @@ export const assets = {
       name: 'skyMap',
       data: skyMap,
    },
-   terrainMap: {
-      name: 'terrainMap',
-      data: terrainMap,
+   pinkMountain: {
+      name: 'pinkMountain',
+      data: pinkMountain,
+   },
+   mainMap: {
+      name: 'mainMap',
+      data: mainMap,
    },
    playerStand: {
       name: 'player',
