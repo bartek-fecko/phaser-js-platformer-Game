@@ -18,8 +18,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       scene.sys.updateList.add(this);
       scene.sys.displayList.add(this);
       this.setScale(scale);
+      this.setDepth(999);
       scene.physics.world.enableBody(this);
       this.cursors = this.scene.input.keyboard.createCursorKeys();
+      this.create();
    }
 
    public create() {
@@ -43,7 +45,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
          key: 'attack',
          repeat: 1,
       });
-
       this.on('animationcomplete', this.animFinishedHandler);
    }
 

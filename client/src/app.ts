@@ -4,7 +4,7 @@ import '#/config/globals.sass';
 import { GameScene } from '#/scenes/gameScene';
 import { LoadingScene } from '#/scenes/loadingScene';
 import { MenuScene } from '#/scenes/menuScene';
-import { UiScene } from '#/scenes/UiScene';
+import { UiScene } from '#/scenes/uiScene';
 
 class KacpGame extends Phaser.Game {
    constructor(config) {
@@ -26,7 +26,7 @@ const config = {
       default: 'arcade',
       gravity: { y: 300 },
       arcade: {
-         // debug: true,
+         debug: true,
       },
    },
 };
