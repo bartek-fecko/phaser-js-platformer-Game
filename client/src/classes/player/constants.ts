@@ -8,21 +8,21 @@ export const assets = {
    playerStand: {
       name: 'playerStand',
       data: playerStand,
-      frameHeight: 64,
       frameWidth: 64,
+      frameHeight: 64,
       scale: 2,
    },
    playerAttack: {
       name: 'playerAttack',
       data: playerAttack,
-      frameHeight: 64,
       frameWidth: 144,
+      frameHeight: 64,
    },
    playerRun: {
       name: 'playerRun',
       data: playerRun,
-      frameHeight: 64,
       frameWidth: 96,
+      frameHeight: 64,
       scale: 2,
    },
 
@@ -32,7 +32,11 @@ export const playerHearts = 3;
 
 export const scale = 2;
 
-export enum Speed {
+export enum PlayerSpeed {
    X = 460,
    Y = 330,
 }
+
+export type LookAt= 'left' | 'right';
+
+export const lifeHearts = 3;

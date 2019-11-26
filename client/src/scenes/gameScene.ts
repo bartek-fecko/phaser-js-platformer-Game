@@ -7,7 +7,7 @@ import * as Phaser from 'phaser';
 import { assets } from './constants';
 
 const { width: gameWidth, height: gameHeight } = dimensions;
-const { monster } = enemyAssets;
+const { monster, skeleton: { skeletonStand } } = enemyAssets;
 
 // this.player.alpha = .1 change alpha opacity
 export class GameScene extends Phaser.Scene {
@@ -47,11 +47,11 @@ export class GameScene extends Phaser.Scene {
          },
       );
       this.load.spritesheet(
-         monster.monsterStand.name,
-         monster.monsterStand.data,
+         skeletonStand.name,
+         skeletonStand.data,
          {
-            frameHeight: monster.monsterStand.frameHeight,
-            frameWidth: monster.monsterStand.frameWidth,
+            frameHeight: skeletonStand.frameHeight,
+            frameWidth: skeletonStand.frameWidth,
          },
       );
       this.load.image(assets.skyMap.name, assets.skyMap.data);
@@ -85,23 +85,26 @@ export class GameScene extends Phaser.Scene {
       this.player = new Player(
          this,
          20,
-         gameHeight - assets.tileBox.width * 2 + -120,
+         gameHeight - assets.tileBox.width * 2 + 20,
          playerAssets.playerStand.name,
       );
+      this.createEnemies();
 
       this.setCameraSettings();
-      this.createEnemies();
       this.setPhysicsSettings();
    }
 
    public update() {
       this.player.update();
+      this.enemies.getChildren().forEach((enemy) => enemy.update());
+
    }
 
    private setPhysicsSettings() {
-      this.physics.world.setBounds(0, 0, this.tileMap.widthInPixels * 2, this.tileMap.heightInPixels);
+      this.physics.world.setBounds(0, 0, this.tileMap.widthInPixels * 2, this.tileMap.heightInPixels * 2);
       this.terrainLayer.setCollisionByProperty({ collisions: true });
       this.physics.add.collider(this.player, this.terrainLayer);
+      this.physics.add.collider(this.enemies, this.terrainLayer);
       this.physics.add.collider(this.player, this.enemies);
    }
 
@@ -116,8 +119,8 @@ export class GameScene extends Phaser.Scene {
       enemiesTileObjects.forEach((enemyTileObject) => {
          this.enemies.add(new Enemy(
             this,
-            'monster',
-            monster.monsterStand.name,
+            'skeleton',
+            skeletonStand.name,
             enemyTileObject,
          ));
       });

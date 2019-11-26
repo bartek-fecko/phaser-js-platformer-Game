@@ -1,11 +1,13 @@
 import * as Phaser from 'phaser';
-import { assets, scale, Speed } from './constants';
+import { assets, lifeHearts, LookAt, PlayerSpeed, scale } from './constants';
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
+   public lookAt: LookAt = 'right';
    private cursors: { [index: string]: Phaser.Input.Keyboard.Key };
    private jumpCounter: number = 0;
    private maxJumps: number = 2;
    private isAttacking: boolean = false;
+   private lifeHearts: number = lifeHearts;
 
    constructor(
       scene: Phaser.Scene,
@@ -46,35 +48,20 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
          repeat: 1,
       });
       this.on('animationcomplete', this.animFinishedHandler);
+      this.body.setSize(24, 32);
    }
 
    public update() {
+      this.scaleX = this.lookAt === 'right' ? scale : -scale;
       if (this.cursors.left.isDown) {
-         this.scaleX = -scale;
-         this.setVelocityX(-Speed.X);
-         this.setOffset(60, 10);
-         if (!this.isAttacking) {
-            this.anims.play('run', true);
-         }
+         this.moveLeft();
       } else if (this.cursors.right.isDown) {
-         this.scaleX = scale;
-         this.setVelocityX(Speed.X);
-         this.setOffset(30, 10);
-         if (!this.isAttacking) {
-            this.anims.play('run', true);
-         }
+         this.moveRight();
       } else {
-         if (!this.isAttacking) {
-            this.anims.play('stand', true);
-         }
-         this.scaleX = scale;
-         this.setOffset(15, 10);
-         this.setVelocityX(0);
+         this.noMove();
       }
       if (this.cursors.space.isDown) {
-         this.anims.play('attack', true);
-         this.isAttacking = true;
-         this.setOffset(60, 10);
+         this.onAttack();
       }
       if ((this.body as Phaser.Physics.Arcade.Body).onFloor()) {
          this.jumpCounter = 0;
@@ -93,9 +80,41 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       }
    }
 
+   private onAttack() {
+      this.anims.play('attack', true);
+      this.isAttacking = true;
+      this.setOffset(60, 10);
+   }
+
+   private noMove() {
+      if (!this.isAttacking) {
+         this.anims.play('stand', true);
+      }
+      this.lookAt === 'right' ? this.setOffset(25, 10) : this.setOffset(50, 10);
+      this.setVelocityX(0);
+   }
+
+   private moveLeft() {
+      this.lookAt = 'left';
+      this.setVelocityX(-PlayerSpeed.X);
+      this.setOffset(60, 10);
+      if (!this.isAttacking) {
+         this.anims.play('run', true);
+      }
+   }
+
+   private moveRight() {
+      this.lookAt = 'right';
+      this.setVelocityX(PlayerSpeed.X);
+      this.setOffset(40, 10);
+      if (!this.isAttacking) {
+         this.anims.play('run', true);
+      }
+   }
+
    private jump() {
       this.jumpCounter++;
       this.setVelocityX(0);
-      this.setVelocityY(-Speed.Y);
+      this.setVelocityY(-PlayerSpeed.Y);
    }
 }
