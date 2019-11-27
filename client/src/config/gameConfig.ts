@@ -11,4 +11,6 @@ export enum SceneNames {
    Ui = 'Ui',
 }
 
-export const gameScale = 2;
+export const gameScale = 2.075;
+
+export const boxWidth = 32 * gameScale;

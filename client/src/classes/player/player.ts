@@ -65,7 +65,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
          this.moveLeft();
       } else if (this.cursors.right.isDown) {
          this.moveRight();
-      } else {
+      } else if (!this.isAttacking) {
          this.noMove();
       }
       if (this.cursors.space.isDown) {
@@ -91,7 +91,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
    private onAttack() {
       this.anims.play(anim.attack, true);
       this.isAttacking = true;
-      this.setOffset(60, 10);
+      this.lookAt === 'right' ? this.setOffset(50, 10) : this.setOffset(80, 10);
    }
 
    private noMove() {

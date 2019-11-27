@@ -7,7 +7,7 @@ import * as Phaser from 'phaser';
 import { assets } from './constants';
 
 const { width: gameWidth, height: gameHeight } = dimensions;
-const { monster, skeleton: { skeletonStandSprite, skeletonRunSprite } } = enemyAssets;
+const { monster, skeleton: { skeletonStandSprite, skeletonRunSprite, skeletonAttackSprite } } = enemyAssets;
 const { playerAttackSprite, playerStandSprite, playerRunSprite } = playerAssets;
 
 // this.player.alpha = .1 change alpha opacity
@@ -61,6 +61,14 @@ export class GameScene extends Phaser.Scene {
          {
             frameHeight: skeletonRunSprite.frameHeight,
             frameWidth: skeletonRunSprite.frameWidth,
+         },
+      );
+      this.load.spritesheet(
+         skeletonAttackSprite.name,
+         skeletonAttackSprite.data,
+         {
+            frameHeight: skeletonAttackSprite.frameHeight,
+            frameWidth: skeletonAttackSprite.frameWidth,
          },
       );
       this.load.image(assets.skyMap.name, assets.skyMap.data);
