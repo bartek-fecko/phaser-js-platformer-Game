@@ -30,6 +30,8 @@ export const assets = {
          data: skeletonRunSprite,
          frameWidth: 22,
          frameHeight: 33,
+         offsetX: 10,
+         offsetY: 5,
       },
       skeletonAttackSprite: {
          name: 'skeletonAttackSprite',

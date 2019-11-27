@@ -122,7 +122,11 @@ export class GameScene extends Phaser.Scene {
       this.terrainLayer.setCollisionByProperty({ collisions: true });
       this.physics.add.collider(this.player, this.terrainLayer);
       this.physics.add.collider(this.enemies, this.terrainLayer);
-      this.physics.add.collider(this.player, this.enemies);
+      this.physics.add.collider(this.player, this.enemies, this.onPlayerEnemyCollision);
+   }
+
+   private onPlayerEnemyCollision(player: Player, enemy: Enemy) {
+      enemy.onPlayerCollision();
    }
 
    private setCameraSettings() {

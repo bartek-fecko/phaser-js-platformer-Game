@@ -34,6 +34,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
    }
 
    public create() {
+      this.setImmovable(true);
       this.setGravity(0, 800);
       this.setCollideWorldBounds(true);
       const { playerRunSprite, playerStandSprite, playerAttackSprite } = assets;
@@ -60,7 +61,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
    }
 
    public update() {
-      this.scaleX = this.lookAt === 'right' ? scale : -scale;
       if (this.cursors.left.isDown) {
          this.moveLeft();
       } else if (this.cursors.right.isDown) {
@@ -89,33 +89,37 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
    }
 
    private onAttack() {
+      this.lookAt === 'right' ? this.setOffset(65, 10) : this.setOffset(65, 10);
+      this.anims.stopOnRepeat();
       this.anims.play(anim.attack, true);
       this.isAttacking = true;
-      this.lookAt === 'right' ? this.setOffset(50, 10) : this.setOffset(80, 10);
    }
 
    private noMove() {
+      this.setOffset(25, 10);
+      this.setVelocityX(0);
       if (!this.isAttacking) {
          this.anims.play(anim.stand, true);
       }
-      this.lookAt === 'right' ? this.setOffset(25, 10) : this.setOffset(50, 10);
-      this.setVelocityX(0);
    }
 
    private moveLeft() {
       this.lookAt = 'left';
+      this.flipX = true;
       this.setVelocityX(-PlayerSpeed.X);
-      this.setOffset(60, 10);
       if (!this.isAttacking) {
+         this.setOffset(40, 10);
+         this.anims.stop();
          this.anims.play(anim.run, true);
       }
    }
 
    private moveRight() {
       this.lookAt = 'right';
+      this.flipX = false;
       this.setVelocityX(PlayerSpeed.X);
-      this.setOffset(40, 10);
       if (!this.isAttacking) {
+         this.setOffset(40, 10);
          this.anims.play(anim.run, true);
       }
    }

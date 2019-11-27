@@ -39,7 +39,7 @@ export const playerHearts = 3;
 export const scale = 2;
 
 export enum PlayerSpeed {
-   X = 460,
+   X = 300,
    Y = 330,
 }
 
