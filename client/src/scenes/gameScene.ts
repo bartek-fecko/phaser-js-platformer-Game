@@ -7,7 +7,8 @@ import * as Phaser from 'phaser';
 import { assets } from './constants';
 
 const { width: gameWidth, height: gameHeight } = dimensions;
-const { monster, skeleton: { skeletonStand } } = enemyAssets;
+const { monster, skeleton: { skeletonStandSprite, skeletonRunSprite } } = enemyAssets;
+const { playerAttackSprite, playerStandSprite, playerRunSprite } = playerAssets;
 
 // this.player.alpha = .1 change alpha opacity
 export class GameScene extends Phaser.Scene {
@@ -23,35 +24,43 @@ export class GameScene extends Phaser.Scene {
 
    public preload() {
       this.load.spritesheet(
-         playerAssets.playerStand.name,
-         playerAssets.playerStand.data,
+         playerStandSprite.name,
+         playerStandSprite.data,
          {
-            frameHeight: playerAssets.playerStand.frameHeight,
-            frameWidth: playerAssets.playerStand.frameWidth,
+            frameHeight: playerStandSprite.frameHeight,
+            frameWidth: playerStandSprite.frameWidth,
          },
       );
       this.load.spritesheet(
-         playerAssets.playerRun.name,
-         playerAssets.playerRun.data,
+         playerRunSprite.name,
+         playerRunSprite.data,
          {
-            frameHeight: playerAssets.playerRun.frameHeight,
-            frameWidth: playerAssets.playerRun.frameWidth,
+            frameHeight: playerRunSprite.frameHeight,
+            frameWidth: playerRunSprite.frameWidth,
          },
       );
       this.load.spritesheet(
-         playerAssets.playerAttack.name,
-         playerAssets.playerAttack.data,
+         playerAttackSprite.name,
+         playerAttackSprite.data,
          {
-            frameHeight: playerAssets.playerAttack.frameHeight,
-            frameWidth: playerAssets.playerAttack.frameWidth,
+            frameHeight: playerAttackSprite.frameHeight,
+            frameWidth: playerAttackSprite.frameWidth,
          },
       );
       this.load.spritesheet(
-         skeletonStand.name,
-         skeletonStand.data,
+         skeletonStandSprite.name,
+         skeletonStandSprite.data,
          {
-            frameHeight: skeletonStand.frameHeight,
-            frameWidth: skeletonStand.frameWidth,
+            frameHeight: skeletonStandSprite.frameHeight,
+            frameWidth: skeletonStandSprite.frameWidth,
+         },
+      );
+      this.load.spritesheet(
+         skeletonRunSprite.name,
+         skeletonRunSprite.data,
+         {
+            frameHeight: skeletonRunSprite.frameHeight,
+            frameWidth: skeletonRunSprite.frameWidth,
          },
       );
       this.load.image(assets.skyMap.name, assets.skyMap.data);
@@ -86,7 +95,7 @@ export class GameScene extends Phaser.Scene {
          this,
          20,
          gameHeight - assets.tileBox.width * 2 + 20,
-         playerAssets.playerStand.name,
+         playerAssets.playerStandSprite.name,
       );
       this.createEnemies();
 
@@ -109,6 +118,7 @@ export class GameScene extends Phaser.Scene {
    }
 
    private setCameraSettings() {
+      this.cameras.main.roundPixels = true;
       this.cameras.main.setBounds(0, 0, this.tileMap.widthInPixels * 2, 0);
       this.cameras.main.startFollow(this.player);
    }
@@ -120,7 +130,7 @@ export class GameScene extends Phaser.Scene {
          this.enemies.add(new Enemy(
             this,
             'skeleton',
-            skeletonStand.name,
+            skeletonStandSprite.name,
             enemyTileObject,
          ));
       });

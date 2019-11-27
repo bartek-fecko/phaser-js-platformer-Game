@@ -22,8 +22,9 @@ export class MenuScene extends Phaser.Scene {
          },
       );
       text.setInteractive();
-      text.on('pointerdown', () => (
-         this.scene.start(SceneNames.Game, { data: 'from menu' })
-      ));
+      text.on('pointerdown', () => {
+         this.scene.start(SceneNames.Game, { data: 'from menu' });
+         this.scene.start(SceneNames.Ui);
+      });
    }
 }

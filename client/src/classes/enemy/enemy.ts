@@ -1,11 +1,17 @@
-import { Player } from '#/classes/player/player';
 import { LookAt } from '#/classes/player/constants';
+import { Player } from '#/classes/player/player';
 import { gameScale } from '#/config/gameConfig';
 import * as Phaser from 'phaser';
-import { assets, EnemyOptions, EnemySpeed, EnemyType } from './constants';
+import {
+   assets,
+   enemyAnimNames as anim,
+   EnemyOptions,
+   EnemySpeed,
+   EnemyType,
+} from './constants';
 
 export class Enemy extends Phaser.Physics.Arcade.Sprite {
-   public lookAt: LookAt = 'left';
+   public lookAt: LookAt = 'right';
    private cursors: { [index: string]: Phaser.Input.Keyboard.Key };
    private frameWidth: number;
    private frameHeight: number;
@@ -13,6 +19,7 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
    private lifeHearts: number;
    private startPoint: { x: number, y: number };
    private isFighting: boolean = false;
+   private isAttacking: boolean = false;
 
    constructor(
       scene: Phaser.Scene,
@@ -38,35 +45,37 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
    public create() {
       const enemy = assets[this.enemyType];
       this.setCollideWorldBounds(true);
-      this.setScale(enemy.scale);
       this.lifeHearts = enemy.lifeHearts;
       setTimeout(() => {
          this.setGravity(0, enemy.gravityY);
          this.setVelocityX(100);
+         this.setScale(enemy.scale);
+         this.anims.play(anim.run);
       }, 0);
 
-      const { skeleton: { skeletonStand, skeletonAttack, skeletonRun } } = assets;
+      const { skeleton: { skeletonStandSprite, skeletonAttackSprite, skeletonRunSprite } } = assets;
       this.scene.anims.create({
          frameRate: 10,
-         frames: this.scene.anims.generateFrameNumbers(skeletonRun.name, { start: 0, end: 13 }),
-         key: 'run',
-         repeat: -1,
-      });
-      this.scene.anims.create({
-         frameRate: 8,
-         frames: this.scene.anims.generateFrameNumbers(skeletonStand.name, { start: 0, end: 11 }),
-         key: 'stand',
+         frames: this.scene.anims.generateFrameNumbers(skeletonRunSprite.name, { start: 0, end: 13 }),
+         key: anim.run,
          repeat: -1,
       });
       this.scene.anims.create({
          frameRate: 10,
-         frames: this.scene.anims.generateFrameNumbers(skeletonAttack.name, { start: 0, end: 11 }),
-         key: 'attack',
+         frames: this.scene.anims.generateFrameNumbers(skeletonStandSprite.name, { start: 0, end: 11 }),
+         key: anim.stand,
+         repeat: -1,
+      });
+      this.scene.anims.create({
+         frameRate: 10,
+         frames: this.scene.anims.generateFrameNumbers(skeletonAttackSprite.name, { start: 0, end: 11 }),
+         key: anim.attack,
          repeat: 1,
       });
    }
 
    public update() {
+      this.scaleX = this.lookAt === 'right' ? assets.skeleton.scale : -assets.skeleton.scale;
       const playerX = (this.scene as Phaser.Scene & { player: Player }).player.x;
       if (Math.abs(playerX - this.x)) {
          this.fightMode();
@@ -79,29 +88,29 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
    private patrol() {
       this.startPoint.x + 300 > this.x
          // tslint:disable-next-line: no-unused-expression
-         ? this.startPoint.x - 300 > this.x && this.setVelocityX(EnemySpeed.X)
-         : this.setVelocityX(-EnemySpeed.X);
+         ? this.startPoint.x - 300 > this.x && this.moveRight()
+         : this.moveLeft();
    }
 
    private fightMode() {
-      
+
    }
 
-   // private moveLeft() {
-   //    this.lookAt = 'left';
-   //    this.setVelocityX(-EnemySpeed.X);
-   //    this.setOffset(60, 10);
-   //    if (!this.isAttacking) {
-   //       this.anims.play('run', true);
-   //    }
-   // }
+   private moveLeft() {
+      this.lookAt = 'left';
+      this.setVelocityX(-EnemySpeed.X);
+      // this.setOffset(40, 0);
+      if (!this.isAttacking) {
+         this.anims.play(anim.run, true);
+      }
+   }
 
-   // private moveRight() {
-   //    this.lookAt = 'right';
-   //    this.setVelocityX(EnemySpeed.X);
-   //    this.setOffset(40, 10);
-   //    if (!this.isAttacking) {
-   //       this.anims.play('run', true);
-   //    }
-   // }
+   private moveRight() {
+      this.lookAt = 'right';
+      this.setVelocityX(EnemySpeed.X);
+      // this.setOffset(0, 0);
+      if (!this.isAttacking) {
+         this.anims.play(anim.run, true);
+      }
+   }
 }

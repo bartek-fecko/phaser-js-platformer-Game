@@ -1,5 +1,12 @@
 import * as Phaser from 'phaser';
-import { assets, lifeHearts, LookAt, PlayerSpeed, scale } from './constants';
+import {
+   assets,
+   lifeHearts,
+   LookAt,
+   playerAnimNames as anim,
+   PlayerSpeed,
+   scale,
+} from './constants';
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
    public lookAt: LookAt = 'right';
@@ -29,22 +36,23 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
    public create() {
       this.setGravity(0, 800);
       this.setCollideWorldBounds(true);
+      const { playerRunSprite, playerStandSprite, playerAttackSprite } = assets;
       this.scene.anims.create({
          frameRate: 10,
-         frames: this.scene.anims.generateFrameNumbers(assets.playerRun.name, { start: 0, end: 7, first: 0 }),
-         key: 'run',
+         frames: this.scene.anims.generateFrameNumbers(playerRunSprite.name, { start: 0, end: 7, first: 0 }),
+         key: anim.run,
          repeat: -1,
       });
       this.scene.anims.create({
          frameRate: 8,
-         frames: this.scene.anims.generateFrameNumbers(assets.playerStand.name, { start: 0, end: 7 }),
-         key: 'stand',
+         frames: this.scene.anims.generateFrameNumbers(playerStandSprite.name, { start: 0, end: 7 }),
+         key: anim.stand,
          repeat: -1,
       });
       this.scene.anims.create({
          frameRate: 10,
-         frames: this.scene.anims.generateFrameNumbers(assets.playerAttack.name, { start: 9, end: 13 }),
-         key: 'attack',
+         frames: this.scene.anims.generateFrameNumbers(playerAttackSprite.name, { start: 9, end: 13 }),
+         key: anim.attack,
          repeat: 1,
       });
       this.on('animationcomplete', this.animFinishedHandler);
@@ -81,14 +89,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
    }
 
    private onAttack() {
-      this.anims.play('attack', true);
+      this.anims.play(anim.attack, true);
       this.isAttacking = true;
       this.setOffset(60, 10);
    }
 
    private noMove() {
       if (!this.isAttacking) {
-         this.anims.play('stand', true);
+         this.anims.play(anim.stand, true);
       }
       this.lookAt === 'right' ? this.setOffset(25, 10) : this.setOffset(50, 10);
       this.setVelocityX(0);
@@ -99,7 +107,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.setVelocityX(-PlayerSpeed.X);
       this.setOffset(60, 10);
       if (!this.isAttacking) {
-         this.anims.play('run', true);
+         this.anims.play(anim.run, true);
       }
    }
 
@@ -108,7 +116,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.setVelocityX(PlayerSpeed.X);
       this.setOffset(40, 10);
       if (!this.isAttacking) {
-         this.anims.play('run', true);
+         this.anims.play(anim.run, true);
       }
    }
 

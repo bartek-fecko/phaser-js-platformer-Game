@@ -1,31 +1,37 @@
 // tslint:disable: ordered-imports
 // tslint:disable: object-literal-sort-keys
-import * as playerRun from 'assets/knight/noBKG_KnightRun_strip.png';
-import * as playerStand from 'assets/knight/noBKG_KnightIdle_strip.png';
-import * as playerAttack from 'assets/knight/noBKG_KnightAttack_strip.png';
+import * as playerRunSprite from 'assets/knight/noBKG_KnightRun_strip.png';
+import * as playerStandSprite from 'assets/knight/noBKG_KnightIdle_strip.png';
+import * as playerAttackSprite from 'assets/knight/noBKG_KnightAttack_strip.png';
 
 export const assets = {
-   playerStand: {
-      name: 'playerStand',
-      data: playerStand,
+   playerStandSprite: {
+      name: 'playerStandSprite',
+      data: playerStandSprite,
       frameWidth: 64,
       frameHeight: 64,
       scale: 2,
    },
-   playerAttack: {
-      name: 'playerAttack',
-      data: playerAttack,
+   playerAttackSprite: {
+      name: 'playerAttackSprite',
+      data: playerAttackSprite,
       frameWidth: 144,
       frameHeight: 64,
    },
-   playerRun: {
-      name: 'playerRun',
-      data: playerRun,
+   playerRunSprite: {
+      name: 'playerRunSprite',
+      data: playerRunSprite,
       frameWidth: 96,
       frameHeight: 64,
       scale: 2,
    },
 
+};
+
+export const playerAnimNames = {
+   stand: 'playerStandAnim',
+   run: 'playerRunAnim',
+   attack: 'playerAttackAnim',
 };
 
 export const playerHearts = 3;
@@ -37,6 +43,6 @@ export enum PlayerSpeed {
    Y = 330,
 }
 
-export type LookAt= 'left' | 'right';
+export type LookAt = 'left' | 'right';
 
 export const lifeHearts = 3;
