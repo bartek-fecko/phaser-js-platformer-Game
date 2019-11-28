@@ -1,3 +1,4 @@
+import { dimensions, gameScale } from '#/config/gameConfig';
 import * as Phaser from 'phaser';
 import {
    assets,
@@ -7,6 +8,7 @@ import {
    PlayerSpeed,
    scale,
 } from './constants';
+const {  height: gameHeight } = dimensions;
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
    public lookAt: LookAt = 'right';
@@ -15,6 +17,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
    private maxJumps: number = 2;
    private isAttacking: boolean = false;
    private lifeHearts: number = lifeHearts;
+   private sword: Phaser.Physics.Arcade.Sprite;
+   private playerContainer: Phaser.GameObjects.Container;
 
    constructor(
       scene: Phaser.Scene,
@@ -58,6 +62,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       });
       this.on('animationcomplete', this.animFinishedHandler);
       this.body.setSize(24, 32);
+      this.addSword();
+   }
+
+   public addSword() {
+      this.sword = this.scene.physics.add.sprite(
+         this.body.width, 500, assets.swordSprite.name,
+      ).setOrigin(0);
    }
 
    public update() {
@@ -79,11 +90,24 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       ) {
          this.jump();
       }
+      this.placeSword(this.isAttacking);
+   }
+
+   public placeSword(isAttacking: boolean) {
+      if (!isAttacking) {
+         return this.sword.setY(gameHeight + 400);
+      }
+      this.sword.setX(this.body.x + (
+         this.lookAt === 'right'
+            ? this.body.width * 0.7
+            : -this.body.width * .5
+      ));
+      this.sword.setY(this.body.y + this.body.height * .4);
    }
 
    private animFinishedHandler(animation: Phaser.Animations.Animation) {
       this.isAttacking = false;
-      if (animation.key) {
+      if (animation.key === anim.attack) {
          this.isAttacking = false;
       }
    }
@@ -109,7 +133,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.setVelocityX(-PlayerSpeed.X);
       if (!this.isAttacking) {
          this.setOffset(40, 10);
-         this.anims.stop();
          this.anims.play(anim.run, true);
       }
    }

@@ -8,7 +8,7 @@ import { assets } from './constants';
 
 const { width: gameWidth, height: gameHeight } = dimensions;
 const { monster, skeleton: { skeletonStandSprite, skeletonRunSprite, skeletonAttackSprite } } = enemyAssets;
-const { playerAttackSprite, playerStandSprite, playerRunSprite } = playerAssets;
+const { playerAttackSprite, playerStandSprite, playerRunSprite, swordSprite } = playerAssets;
 
 // this.player.alpha = .1 change alpha opacity
 export class GameScene extends Phaser.Scene {
@@ -71,6 +71,11 @@ export class GameScene extends Phaser.Scene {
             frameWidth: skeletonAttackSprite.frameWidth,
          },
       );
+      this.load.image(
+         swordSprite.name,
+         swordSprite.data,
+        
+      );
       this.load.image(assets.skyMap.name, assets.skyMap.data);
       this.load.image(assets.pinkMountain.name, assets.pinkMountain.data);
       this.load.image(assets.mainMap.name, assets.mainMap.data);
@@ -105,6 +110,7 @@ export class GameScene extends Phaser.Scene {
          gameHeight - assets.tileBox.width * 2 + 20,
          playerAssets.playerStandSprite.name,
       );
+
       this.createEnemies();
 
       this.setCameraSettings();

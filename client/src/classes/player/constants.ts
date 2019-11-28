@@ -3,6 +3,7 @@
 import * as playerRunSprite from 'assets/knight/noBKG_KnightRun_strip.png';
 import * as playerStandSprite from 'assets/knight/noBKG_KnightIdle_strip.png';
 import * as playerAttackSprite from 'assets/knight/noBKG_KnightAttack_strip.png';
+import * as swordSprite from '#/assets/knight/sword.png';
 
 export const assets = {
    playerStandSprite: {
@@ -25,7 +26,12 @@ export const assets = {
       frameHeight: 64,
       scale: 2,
    },
-
+   swordSprite: {
+      name: 'swordSprite',
+      data: swordSprite,
+      frameWidth: 27,
+      frameHeight: 9,
+   },
 };
 
 export const playerAnimNames = {

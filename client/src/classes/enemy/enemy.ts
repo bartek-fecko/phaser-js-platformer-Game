@@ -23,7 +23,8 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
    private startPoint: { x: number, y: number };
    private isFighting: boolean = false;
    private isAttacking: boolean = false;
-
+   private lastPlayerPosition: { x: number, y: number };
+   
    constructor(
       scene: Phaser.Scene,
       type: EnemyType,
@@ -95,6 +96,7 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
    }
 
    public onPlayerCollision() {
+      console.log('y')
       const { offsetX, offsetY } = skeletonRunSprite;
       this.isAttacking = true;
       this.setVelocityX(0);
@@ -111,9 +113,9 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
 
    private fightMode() {
       this.isFighting = true;
-      const playerX = (this.scene as Phaser.Scene & { player: Player }).player.x;
+      const playerX = (this.scene as Phaser.Scene & { player: Player }).player.body.x;
 
-      if (!this.isAttacking || Math.abs(Math.round(playerX - this.x)) > this.width * gameScale) {
+      if (!this.isAttacking || Math.abs(Math.round(playerX - this.body.x)) > this.body.width) {
          this.isAttacking = false;
          playerX < this.x
             ? this.move('left', -EnemySpeed.X * 2)

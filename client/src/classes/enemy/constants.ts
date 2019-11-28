@@ -16,7 +16,7 @@ export const assets = {
       },
       gravityY: 600,
       scale: 3,
-      lifeHearts: 2,
+      lifeHearts: 5,
    },
    skeleton: {
       skeletonStandSprite: {
