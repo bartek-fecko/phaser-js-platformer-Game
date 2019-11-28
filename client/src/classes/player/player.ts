@@ -8,16 +8,17 @@ import {
    PlayerSpeed,
    scale,
 } from './constants';
-const {  height: gameHeight } = dimensions;
+const { height: gameHeight } = dimensions;
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
    public lookAt: LookAt = 'right';
+   public sword: Phaser.Physics.Arcade.Sprite;
+   private attackForce = 1;
    private cursors: { [index: string]: Phaser.Input.Keyboard.Key };
    private jumpCounter: number = 0;
    private maxJumps: number = 2;
    private isAttacking: boolean = false;
    private lifeHearts: number = lifeHearts;
-   private sword: Phaser.Physics.Arcade.Sprite;
    private playerContainer: Phaser.GameObjects.Container;
 
    constructor(
@@ -68,7 +69,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
    public addSword() {
       this.sword = this.scene.physics.add.sprite(
          this.body.width, 500, assets.swordSprite.name,
-      ).setOrigin(0);
+      )
+         .setOrigin(0)
+         .setVisible(false);
+      this.sword.body.setSize(this.body.width, 10);
    }
 
    public update() {
@@ -95,14 +99,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
    public placeSword(isAttacking: boolean) {
       if (!isAttacking) {
-         return this.sword.setY(gameHeight + 400);
+         // return this.sword.setY(gameHeight + 400);
       }
       this.sword.setX(this.body.x + (
          this.lookAt === 'right'
-            ? this.body.width * 0.7
-            : -this.body.width * .5
+            ? this.body.width * .8
+            : -this.sword.width * .8
       ));
       this.sword.setY(this.body.y + this.body.height * .4);
+   }
+
+   public getAttackForce() {
+      return this.attackForce;
    }
 
    private animFinishedHandler(animation: Phaser.Animations.Animation) {

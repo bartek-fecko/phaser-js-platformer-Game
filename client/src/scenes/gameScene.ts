@@ -7,7 +7,9 @@ import * as Phaser from 'phaser';
 import { assets } from './constants';
 
 const { width: gameWidth, height: gameHeight } = dimensions;
-const { monster, skeleton: { skeletonStandSprite, skeletonRunSprite, skeletonAttackSprite } } = enemyAssets;
+const { monster, skeleton: {
+   skeletonStandSprite, skeletonRunSprite, skeletonAttackSprite, skeletonDeadSprite,
+} } = enemyAssets;
 const { playerAttackSprite, playerStandSprite, playerRunSprite, swordSprite } = playerAssets;
 
 // this.player.alpha = .1 change alpha opacity
@@ -71,10 +73,17 @@ export class GameScene extends Phaser.Scene {
             frameWidth: skeletonAttackSprite.frameWidth,
          },
       );
+      this.load.spritesheet(
+         skeletonDeadSprite.name,
+         skeletonDeadSprite.data,
+         {
+            frameHeight: skeletonDeadSprite.frameHeight,
+            frameWidth: skeletonDeadSprite.frameWidth,
+         },
+      );
       this.load.image(
          swordSprite.name,
          swordSprite.data,
-        
       );
       this.load.image(assets.skyMap.name, assets.skyMap.data);
       this.load.image(assets.pinkMountain.name, assets.pinkMountain.data);
@@ -120,7 +129,6 @@ export class GameScene extends Phaser.Scene {
    public update() {
       this.player.update();
       this.enemies.getChildren().forEach((enemy) => enemy.update());
-
    }
 
    private setPhysicsSettings() {
@@ -129,10 +137,30 @@ export class GameScene extends Phaser.Scene {
       this.physics.add.collider(this.player, this.terrainLayer);
       this.physics.add.collider(this.enemies, this.terrainLayer);
       this.physics.add.collider(this.player, this.enemies, this.onPlayerEnemyCollision);
+      this.physics.add.collider(this.player.sword, this.enemies, this.onSwordEnemyCollision());
+   }
+
+   private onSwordEnemyCollision() {
+      let canAttack = true;
+      return (sword: Phaser.Physics.Arcade.Sprite, enemy: Enemy) => {
+         if (canAttack) {
+            canAttack = false;
+            if (enemy.isAlive) {
+               enemy.setDamage(this.player.getAttackForce());
+            } else {
+               // enemy.setFrame(enemyAssets.skeleton.skeletonDeadSprite.name)
+            }
+            setTimeout(() => {
+               canAttack = true;
+            }, 700);
+         }
+      };
    }
 
    private onPlayerEnemyCollision(player: Player, enemy: Enemy) {
-      enemy.onPlayerCollision();
+      if (enemy.isAlive) {
+         enemy.onPlayerCollision();
+      }
    }
 
    private setCameraSettings() {

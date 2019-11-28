@@ -55,6 +55,7 @@ export const enemyAnimNames = {
    stand: 'enemyStandAnim',
    run: 'enemyRunAnim',
    attack: 'enemyAttackAnim',
+   dead: 'enemyDeadAnim',
 };
 
 export type EnemyType = 'monster' | 'normal' | 'skeleton';

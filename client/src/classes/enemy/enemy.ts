@@ -10,8 +10,10 @@ import {
    EnemySpeed,
    EnemyType,
 } from './constants';
+import { thisExpression } from '@babel/types';
 
-const { skeleton: { skeletonStandSprite, skeletonAttackSprite, skeletonRunSprite } } = assets;
+const { skeleton: { skeletonStandSprite, skeletonAttackSprite, skeletonRunSprite, skeletonDeadSprite } } = assets;
+const graveyard: Enemy[] = [];
 
 export class Enemy extends Phaser.Physics.Arcade.Sprite {
    public lookAt: LookAt = 'right';
@@ -24,7 +26,8 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
    private isFighting: boolean = false;
    private isAttacking: boolean = false;
    private lastPlayerPosition: { x: number, y: number };
-   
+   public isAlive = true;
+
    constructor(
       scene: Phaser.Scene,
       type: EnemyType,
@@ -75,28 +78,57 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
          key: anim.attack,
          repeat: -1,
       });
-      this.on('animationstart', this.animStartHandler);
+      this.scene.anims.create({
+         frameRate: 10,
+         frames: this.scene.anims.generateFrameNumbers(skeletonDeadSprite.name, { start: 0, end: 15 }),
+         key: anim.dead,
+         repeat: 0,
+      });
+      // this.on('animationstart', this.animStartHandler);
+      // this.on('animationcomplete', this.animEndHandler);
    }
 
-   public animStartHandler(animation: Phaser.Animations.Animation) {
-      if (animation.key === anim.attack) {
-         // this.setY(this.y - 20);
-         // this.body.
-         // this.setOffset(0, 70);
+   // public animStartHandler(animation: Phaser.Animations.Animation) {
+   //    if (animation.key === anim.attack) {
+   //       // this.setY(this.y - 20);
+   //       // this.body.
+   //       // this.setOffset(0, 70);
+   //    }
+   //    return;
+   // }
+
+   public animEndHandler(animation: Phaser.Animations.Animation) {
+      if (animation.key === anim.dead && this.anims) {
+         this.anims.destroy();
       }
    }
 
    public update() {
-      const playerX = (this.scene as Phaser.Scene & { player: Player }).player.x;
+      if (this.lifeHearts === 0 && this.isAlive) {
+         this.onDelete();
+      } else if (this.lifeHearts > 0 && this.isAlive) {
+         const playerX = (this.scene as Phaser.Scene & { player: Player }).player.body.x;
+         Math.abs(playerX - this.x) < boxWidth * 5 ? this.fightMode() : this.isFighting = false;
+         if (!this.isFighting) {
+            this.patrol();
+         }
+      }
+   }
 
-      Math.abs(playerX - this.x) < boxWidth * 5 ? this.fightMode() : this.isFighting = false;
-      if (!this.isFighting) {
-         this.patrol();
+   public setDamage(amount: number) {
+      this.lifeHearts -= amount;
+   }
+
+   public onDelete() {
+      if (this.body && this.anims) {
+         this.setOffset(0);
+         this.setVelocityX(0);
+         this.isAlive = false;
+         this.anims.play(anim.dead, false);
       }
    }
 
    public onPlayerCollision() {
-      console.log('y')
       const { offsetX, offsetY } = skeletonRunSprite;
       this.isAttacking = true;
       this.setVelocityX(0);
