@@ -1,3 +1,3 @@
-# phaser game
+# js platformer game
 
-https://kacgame.herokuapp.com/
+https://platformergame.herokuapp.com/
