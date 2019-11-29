@@ -7,22 +7,39 @@ export class MenuScene extends Phaser.Scene {
          key: SceneNames.Menu,
       });
    }
+
    public init(data) {
 
    }
 
    public create() {
-      const text = this.add.text(
+      const container = this.add.container(
          this.game.renderer.width / 2 - 50,
          this.game.renderer.height / 2 - 50,
-         'Play game',
-         {
-            fill: '#FFFFFF',
-            font: '30px mainFont',
-         },
       );
-      text.setInteractive();
-      text.on('pointerdown', () => {
+
+      const fontStyles = {
+         fill: '#FFFFFF',
+         font: '30px mainFont',
+      };
+
+      const playGameText = this.add.text(0, -50, 'Play game', { ...fontStyles, fill: '#199ca6'});
+      const texts = [
+         { description: 'move left', key: '← left arrow' },
+         { description: 'move right', key: '→ right arrow' },
+         { description: 'jump', key: '↑ up arrow' },
+         { description: 'attack', key: 'space' },
+      ];
+
+      container.add(playGameText);
+      const textGroup = this.add.group();
+      texts.forEach(({ description, key }, i) => {
+         container.add(this.add.text(0, i * 30 + 50, description, fontStyles));
+         container.add(this.add.text(100, i * 30 + 50, key, fontStyles));
+      });
+
+      playGameText.setInteractive();
+      playGameText.on('pointerdown', () => {
          this.scene.start(SceneNames.Game, { data: 'from menu' });
          this.scene.start(SceneNames.Ui);
       });

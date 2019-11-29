@@ -99,11 +99,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
    public placeSword(isAttacking: boolean) {
       if (!isAttacking) {
-         // return this.sword.setY(gameHeight + 400);
+         return this.sword.setY(gameHeight + 400);
       }
       this.sword.setX(this.body.x + (
          this.lookAt === 'right'
-            ? this.body.width * .8
+            ? this.body.width * .6
             : -this.sword.width * .8
       ));
       this.sword.setY(this.body.y + this.body.height * .4);

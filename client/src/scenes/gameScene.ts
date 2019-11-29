@@ -131,24 +131,14 @@ export class GameScene extends Phaser.Scene {
       this.enemies.getChildren().forEach((enemy) => enemy.update());
    }
 
-   private setPhysicsSettings() {
-      this.physics.world.setBounds(0, 0, this.tileMap.widthInPixels * 2, this.tileMap.heightInPixels * 2);
-      this.terrainLayer.setCollisionByProperty({ collisions: true });
-      this.physics.add.collider(this.player, this.terrainLayer);
-      this.physics.add.collider(this.enemies, this.terrainLayer);
-      this.physics.add.collider(this.player, this.enemies, this.onPlayerEnemyCollision);
-      this.physics.add.collider(this.player.sword, this.enemies, this.onSwordEnemyCollision());
-   }
-
    private onSwordEnemyCollision() {
       let canAttack = true;
       return (sword: Phaser.Physics.Arcade.Sprite, enemy: Enemy) => {
+         console.log('yes')
          if (canAttack) {
             canAttack = false;
             if (enemy.isAlive) {
                enemy.setDamage(this.player.getAttackForce());
-            } else {
-               // enemy.setFrame(enemyAssets.skeleton.skeletonDeadSprite.name)
             }
             setTimeout(() => {
                canAttack = true;
@@ -161,6 +151,15 @@ export class GameScene extends Phaser.Scene {
       if (enemy.isAlive) {
          enemy.onPlayerCollision();
       }
+   }
+
+   private setPhysicsSettings() {
+      this.physics.world.setBounds(0, 0, this.tileMap.widthInPixels * 2, this.tileMap.heightInPixels * 2);
+      this.terrainLayer.setCollisionByProperty({ collisions: true });
+      this.physics.add.collider(this.player, this.terrainLayer);
+      this.physics.add.collider(this.enemies, this.terrainLayer);
+      this.physics.add.collider(this.player, this.enemies, this.onPlayerEnemyCollision);
+      this.physics.add.overlap(this.player.sword, this.enemies, this.onSwordEnemyCollision());
    }
 
    private setCameraSettings() {
