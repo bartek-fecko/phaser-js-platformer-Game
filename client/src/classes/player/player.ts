@@ -19,7 +19,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
    private maxJumps: number = 2;
    private isAttacking: boolean = false;
    private lifeHearts: number = lifeHearts;
-   private playerContainer: Phaser.GameObjects.Container;
 
    constructor(
       scene: Phaser.Scene,
@@ -77,9 +76,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
    public update() {
       if (this.cursors.left.isDown) {
-         this.moveLeft();
+         this.move('left', -PlayerSpeed.X);
       } else if (this.cursors.right.isDown) {
-         this.moveRight();
+         this.move('right', PlayerSpeed.X);
       } else if (!this.isAttacking) {
          this.noMove();
       }
@@ -135,20 +134,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       }
    }
 
-   private moveLeft() {
-      this.lookAt = 'left';
-      this.flipX = true;
-      this.setVelocityX(-PlayerSpeed.X);
-      if (!this.isAttacking) {
-         this.setOffset(40, 10);
-         this.anims.play(anim.run, true);
-      }
-   }
-
-   private moveRight() {
-      this.lookAt = 'right';
-      this.flipX = false;
-      this.setVelocityX(PlayerSpeed.X);
+   private move(direction: LookAt, speed: number) {
+      this.lookAt = direction;
+      this.flipX = direction === 'left' ? true : false;
+      this.setVelocityX(speed);
       if (!this.isAttacking) {
          this.setOffset(40, 10);
          this.anims.play(anim.run, true);

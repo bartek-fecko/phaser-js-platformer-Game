@@ -1,5 +1,7 @@
-import { assets as enemyAssets, EnemyOptions } from '#/classes/enemy/constants';
+import { EnemyOptions } from '#/classes/enemy/constants';
 import { Enemy } from '#/classes/enemy/enemy';
+import { assets as skeletonAssets } from '#/classes/enemy/skeleton/constants';
+import { Skeleton } from '#/classes/enemy/skeleton/skeleton';
 import { assets as playerAssets } from '#/classes/player/constants';
 import { Player } from '#/classes/player/player';
 import { dimensions, gameScale, SceneNames } from '#/config/gameConfig';
@@ -7,16 +9,13 @@ import * as Phaser from 'phaser';
 import { assets } from './constants';
 
 const { width: gameWidth, height: gameHeight } = dimensions;
-const { monster, skeleton: {
-   skeletonStandSprite, skeletonRunSprite, skeletonAttackSprite, skeletonDeadSprite,
-} } = enemyAssets;
+const { skeletonStandSprite, skeletonRunSprite, skeletonAttackSprite, skeletonDeadSprite } = skeletonAssets;
 const { playerAttackSprite, playerStandSprite, playerRunSprite, swordSprite } = playerAssets;
 
 // this.player.alpha = .1 change alpha opacity
 export class GameScene extends Phaser.Scene {
    private player: Player;
-   private enemies: Phaser.Physics.Arcade.Group;
-   private enemiesTileObjects: EnemyOptions[];
+   private skeletons: Phaser.Physics.Arcade.Group;
    private tileMap: Phaser.Tilemaps.Tilemap;
    private terrainLayer: Phaser.Tilemaps.StaticTilemapLayer;
 
@@ -128,13 +127,12 @@ export class GameScene extends Phaser.Scene {
 
    public update() {
       this.player.update();
-      this.enemies.getChildren().forEach((enemy) => enemy.update());
+      this.skeletons.getChildren().forEach((skeleton) => skeleton.update());
    }
 
    private onSwordEnemyCollision() {
       let canAttack = true;
       return (sword: Phaser.Physics.Arcade.Sprite, enemy: Enemy) => {
-         console.log('yes')
          if (canAttack) {
             canAttack = false;
             if (enemy.isAlive) {
@@ -147,7 +145,7 @@ export class GameScene extends Phaser.Scene {
       };
    }
 
-   private onPlayerEnemyCollision(player: Player, enemy: Enemy) {
+   private onPlayerEnemyCollision(player: Player, enemy: Skeleton) {
       if (enemy.isAlive) {
          enemy.onPlayerCollision();
       }
@@ -157,9 +155,13 @@ export class GameScene extends Phaser.Scene {
       this.physics.world.setBounds(0, 0, this.tileMap.widthInPixels * 2, this.tileMap.heightInPixels * 2);
       this.terrainLayer.setCollisionByProperty({ collisions: true });
       this.physics.add.collider(this.player, this.terrainLayer);
-      this.physics.add.collider(this.enemies, this.terrainLayer);
-      this.physics.add.collider(this.player, this.enemies, this.onPlayerEnemyCollision);
-      this.physics.add.overlap(this.player.sword, this.enemies, this.onSwordEnemyCollision());
+      this.physics.add.collider(this.skeletons, this.terrainLayer);
+      this.physics.add.collider(this.player, this.skeletons, this.onPlayerEnemyCollision);
+      this.physics.add.overlap(this.player.sword, this.skeletons, this.onSwordEnemyCollision());
+      // this.enemies.getChildren().forEach((enemy) => (
+      //    this.physics.add.overlap(enemy.sword, this.enemies, this.onSwordEnemyCollision())
+      // ));
+
    }
 
    private setCameraSettings() {
@@ -170,14 +172,9 @@ export class GameScene extends Phaser.Scene {
 
    private createEnemies() {
       const enemiesTileObjects = this.tileMap.objects[0].objects as unknown as EnemyOptions[];
-      this.enemies = this.physics.add.group({ immovable: true });
+      this.skeletons = this.physics.add.group({ immovable: true });
       enemiesTileObjects.forEach((enemyTileObject) => {
-         this.enemies.add(new Enemy(
-            this,
-            'skeleton',
-            skeletonStandSprite.name,
-            enemyTileObject,
-         ));
+         this.skeletons.add(new Skeleton(this, enemyTileObject));
       });
    }
 }
