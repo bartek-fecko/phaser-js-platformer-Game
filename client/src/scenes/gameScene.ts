@@ -130,7 +130,7 @@ export class GameScene extends Phaser.Scene {
       this.skeletons.getChildren().forEach((skeleton) => skeleton.update());
    }
 
-   private onSwordEnemyCollision() {
+   private onPlayerAttack() {
       let canAttack = true;
       return (sword: Phaser.Physics.Arcade.Sprite, enemy: Enemy) => {
          if (canAttack) {
@@ -157,11 +157,13 @@ export class GameScene extends Phaser.Scene {
       this.physics.add.collider(this.player, this.terrainLayer);
       this.physics.add.collider(this.skeletons, this.terrainLayer);
       this.physics.add.collider(this.player, this.skeletons, this.onPlayerEnemyCollision);
-      this.physics.add.overlap(this.player.sword, this.skeletons, this.onSwordEnemyCollision());
-      // this.enemies.getChildren().forEach((enemy) => (
-      //    this.physics.add.overlap(enemy.sword, this.enemies, this.onSwordEnemyCollision())
-      // ));
+      this.physics.add.overlap(this.player.sword, this.skeletons, this.onPlayerAttack());
+      this.skeletons.getChildren().forEach((skeleton: Skeleton) => (
+         this.physics.add.overlap(skeleton.sword, this.player, this.onEnemyAttack.bind(this))
+      ));
+   }
 
+   private onEnemyAttack(sword: Phaser.Physics.Arcade.Sprite, player: Player) {
    }
 
    private setCameraSettings() {

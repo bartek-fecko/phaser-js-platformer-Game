@@ -33,6 +33,8 @@ export class Skeleton extends Enemy {
       );
       this.createAnimations();
       this.setSkeletonOptions();
+      this.on('animationcomplete', this.onAnimComplete);
+      this.on('animationrepeat', this.onAnimRepeat);
    }
 
    public update() {
@@ -44,7 +46,7 @@ export class Skeleton extends Enemy {
          if (!this.isFighting) {
             this.patrol();
          }
-         // this.placeSword(this.isAttacking);
+         this.placeSword(this.isAttacking);
       }
    }
 
@@ -54,6 +56,19 @@ export class Skeleton extends Enemy {
       this.setVelocityX(0);
       this.setOffset(offsetX, offsetY);
       this.anims.play(animKeys.attack, true);
+   }
+
+   private onAnimComplete(animation: Phaser.Animations.Animation) {
+      if (animation.key === animKeys.attack) {
+
+      }
+   }
+
+   private onAnimRepeat(animation: Phaser.Animations.Animation) {
+      if (animation.key === animKeys.attack) {
+
+         console.log('yes')
+      }
    }
 
    private setSkeletonOptions() {
@@ -80,8 +95,8 @@ export class Skeleton extends Enemy {
          repeat: -1,
       });
       this.scene.anims.create({
-         frameRate: 10,
-         frames: this.scene.anims.generateFrameNumbers(skeletonAttackSprite.name, { start: 0, end: 11 }),
+         frameRate: 12,
+         frames: this.scene.anims.generateFrameNumbers(skeletonAttackSprite.name, { start: 0, end: 9 }),
          key: animKeys.attack,
          repeat: -1,
       });
@@ -93,10 +108,10 @@ export class Skeleton extends Enemy {
       });
    }
 
-   private patrol() {
-      this.startPoint.x + 300 > this.x
+   private patrol(range: number = 300) {
+      this.startPoint.x + range > this.x
          // tslint:disable-next-line: no-unused-expression
-         ? this.startPoint.x - 300 > this.x && this.move('right', skeletonSpeed.x)
+         ? this.startPoint.x - range > this.x && this.move('right', skeletonSpeed.x)
          : this.move('left', -skeletonSpeed.x);
    }
 }

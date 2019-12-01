@@ -83,7 +83,7 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
 
    public placeSword(isAttacking: boolean) {
       if (!isAttacking) {
-         // return this.sword.setY(gameHeight + 400);
+         return this.sword.setY(gameHeight + 400);
       }
       this.sword.setX(this.body.x + (
          this.lookAt === 'right'
@@ -95,11 +95,17 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
 
    public fightMode() {
       this.isFighting = true;
-      const playerX = (this.scene as Phaser.Scene & { player: Player }).player.body.x;
+      const player = (this.scene as Phaser.Scene & { player: Player }).player;
+      const playerBodyX = player.body.x;
+      const playerSpriteX = player.x;
 
-      if (!this.isAttacking || Math.abs(Math.round(playerX - this.body.x)) > this.body.width) {
+      if (!this.isAttacking || Math.abs(Math.round(playerBodyX - this.body.x)) > 10) {
+         if (Math.abs(playerSpriteX - this.x) < 20) {
+            this.setVelocityX(0);
+            return;
+         }
          this.isAttacking = false;
-         playerX < this.x
+         playerBodyX < this.x
             ? this.move('left', -this.speed.x * 2)
             : this.move('right', this.speed.x * 2);
       }
