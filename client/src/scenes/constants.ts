@@ -26,3 +26,7 @@ export const assets = {
       data: mapTile,
    },
 };
+
+export interface GameSceneState {
+   lifeHearts: number;
+}

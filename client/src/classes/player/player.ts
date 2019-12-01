@@ -1,16 +1,18 @@
-import { dimensions, gameScale } from '#/config/gameConfig';
+import { game } from '#/app';
+import { dimensions, SceneNames } from '#/config/gameConfig';
 import * as Phaser from 'phaser';
 import {
    assets,
-   lifeHearts,
    LookAt,
-   playerAnimNames as anim,
+   playerAnimNames as animKeys,
+   PlayerEventMessages,
    PlayerSpeed,
    scale,
 } from './constants';
 const { height: gameHeight } = dimensions;
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
+   public isAlive: boolean = true;
    public lookAt: LookAt = 'right';
    public sword: Phaser.Physics.Arcade.Sprite;
    private attackForce = 1;
@@ -18,12 +20,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
    private jumpCounter: number = 0;
    private maxJumps: number = 2;
    private isAttacking: boolean = false;
-   private lifeHearts: number = lifeHearts;
+   private lifeHearts: number;
 
    constructor(
       scene: Phaser.Scene,
       x: number,
       y: number,
+      lifeHearts: number,
       texture: string,
       frame?: string | number,
    ) {
@@ -32,6 +35,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       scene.sys.displayList.add(this);
       this.setScale(scale);
       this.setDepth(999);
+      this.lifeHearts = lifeHearts;
       scene.physics.world.enableBody(this);
       this.cursors = this.scene.input.keyboard.createCursorKeys();
       this.create();
@@ -41,24 +45,31 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.setImmovable(true);
       this.setGravity(0, 800);
       this.setCollideWorldBounds(true);
-      const { playerRunSprite, playerStandSprite, playerAttackSprite } = assets;
+
+      const { playerRunSprite, playerStandSprite, playerAttackSprite, playerDeadSprite } = assets;
       this.scene.anims.create({
          frameRate: 10,
          frames: this.scene.anims.generateFrameNumbers(playerRunSprite.name, { start: 0, end: 7, first: 0 }),
-         key: anim.run,
+         key: animKeys.run,
          repeat: -1,
       });
       this.scene.anims.create({
          frameRate: 8,
          frames: this.scene.anims.generateFrameNumbers(playerStandSprite.name, { start: 0, end: 7 }),
-         key: anim.stand,
+         key: animKeys.stand,
          repeat: -1,
       });
       this.scene.anims.create({
          frameRate: 10,
          frames: this.scene.anims.generateFrameNumbers(playerAttackSprite.name, { start: 9, end: 13 }),
-         key: anim.attack,
+         key: animKeys.attack,
          repeat: 1,
+      });
+      this.scene.anims.create({
+         frameRate: 20,
+         frames: this.scene.anims.generateFrameNumbers(playerDeadSprite.name, { start: 0, end: 15 }),
+         key: animKeys.dead,
+         repeat: 0,
       });
       this.on('animationcomplete', this.animFinishedHandler);
       this.body.setSize(24, 32);
@@ -75,6 +86,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
    }
 
    public update() {
+      if (this.lifeHearts <= 0 && this.isAlive) {
+         this.onDelete();
+      }
+      if (!this.isAlive) {
+         return;
+      }
       if (this.cursors.left.isDown) {
          this.move('left', -PlayerSpeed.X);
       } else if (this.cursors.right.isDown) {
@@ -96,6 +113,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.placeSword(this.isAttacking);
    }
 
+   public setDamage(amount: number) {
+      this.lifeHearts -= amount;
+      this.scene.events.emit(PlayerEventMessages.onPlayerRecieveDamage, { damage: amount });
+   }
+
    public placeSword(isAttacking: boolean) {
       if (!isAttacking) {
          return this.sword.setY(gameHeight + 400);
@@ -112,9 +134,17 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       return this.attackForce;
    }
 
+   private onDelete() {
+      this.isAlive = false;
+      this.setVelocityX(0);
+      game.registry.reset();
+      this.anims.play(animKeys.dead, false);
+      game.scene.start(SceneNames.Restart);
+   }
+
    private animFinishedHandler(animation: Phaser.Animations.Animation) {
       this.isAttacking = false;
-      if (animation.key === anim.attack) {
+      if (animation.key === animKeys.attack) {
          this.isAttacking = false;
       }
    }
@@ -122,7 +152,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
    private onAttack() {
       this.lookAt === 'right' ? this.setOffset(65, 10) : this.setOffset(65, 10);
       this.anims.stopOnRepeat();
-      this.anims.play(anim.attack, true);
+      this.setVelocityX(0);
+      this.anims.play(animKeys.attack, true);
       this.isAttacking = true;
    }
 
@@ -130,7 +161,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.setOffset(25, 10);
       this.setVelocityX(0);
       if (!this.isAttacking) {
-         this.anims.play(anim.stand, true);
+         this.anims.play(animKeys.stand, true);
       }
    }
 
@@ -140,7 +171,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.setVelocityX(speed);
       if (!this.isAttacking) {
          this.setOffset(40, 10);
-         this.anims.play(anim.run, true);
+         this.anims.play(animKeys.run, true);
       }
    }
 

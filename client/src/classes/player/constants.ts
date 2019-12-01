@@ -3,6 +3,7 @@
 import * as playerRunSprite from 'assets/knight/noBKG_KnightRun_strip.png';
 import * as playerStandSprite from 'assets/knight/noBKG_KnightIdle_strip.png';
 import * as playerAttackSprite from 'assets/knight/noBKG_KnightAttack_strip.png';
+import * as playerDeadSprite from 'assets/knight/noBKG_KnightDeath_strip.png';
 import * as swordSprite from '#/assets/knight/sword.png';
 
 export const assets = {
@@ -26,6 +27,13 @@ export const assets = {
       frameHeight: 64,
       scale: 2,
    },
+   playerDeadSprite: {
+      name: 'playerDeadSprite',
+      data: playerDeadSprite,
+      frameWidth: 96,
+      frameHeight: 64,
+      scale: 2,
+   },
    swordSprite: {
       name: 'swordSprite',
       data: swordSprite,
@@ -38,6 +46,7 @@ export const playerAnimNames = {
    stand: 'playerStandAnim',
    run: 'playerRunAnim',
    attack: 'playerAttackAnim',
+   dead: 'playerDeadSprite',
 };
 
 export const playerHearts = 3;
@@ -47,6 +56,10 @@ export const scale = 2;
 export enum PlayerSpeed {
    X = 300,
    Y = 330,
+}
+
+export enum PlayerEventMessages {
+   onPlayerRecieveDamage = 'onPlayerRecieveDamage',
 }
 
 export type LookAt = 'left' | 'right';

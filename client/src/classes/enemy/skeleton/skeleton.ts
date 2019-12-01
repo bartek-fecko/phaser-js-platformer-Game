@@ -33,12 +33,12 @@ export class Skeleton extends Enemy {
       );
       this.createAnimations();
       this.setSkeletonOptions();
-      this.on('animationcomplete', this.onAnimComplete);
+      // this.on('animationcomplete', this.onAnimComplete);
       this.on('animationrepeat', this.onAnimRepeat);
    }
 
    public update() {
-      if (this.lifeHearts === 0 && this.isAlive) {
+      if (this.lifeHearts <= 0 && this.isAlive) {
          this.onDelete();
       } else if (this.lifeHearts > 0 && this.isAlive) {
          const playerX = (this.scene as Phaser.Scene & { player: Player }).player.body.x;
@@ -58,16 +58,15 @@ export class Skeleton extends Enemy {
       this.anims.play(animKeys.attack, true);
    }
 
-   private onAnimComplete(animation: Phaser.Animations.Animation) {
-      if (animation.key === animKeys.attack) {
+   // private onAnimComplete(animation: Phaser.Animations.Animation) {
+   //    if (animation.key === animKeys.attack) {
 
-      }
-   }
+   //    }
+   // }
 
    private onAnimRepeat(animation: Phaser.Animations.Animation) {
       if (animation.key === animKeys.attack) {
-
-         console.log('yes')
+         (this.scene as Phaser.Scene & { player: Player }).player.setDamage(this.sword.damage);
       }
    }
 
@@ -78,7 +77,7 @@ export class Skeleton extends Enemy {
          this.setScale(scale);
          this.anims.play(animKeys.run);
       }, 0);
-      this.addSword(uniqid());
+      this.addSword(uniqid(), 1);
    }
 
    private createAnimations() {
@@ -95,7 +94,7 @@ export class Skeleton extends Enemy {
          repeat: -1,
       });
       this.scene.anims.create({
-         frameRate: 12,
+         frameRate: 18,
          frames: this.scene.anims.generateFrameNumbers(skeletonAttackSprite.name, { start: 0, end: 9 }),
          key: animKeys.attack,
          repeat: -1,

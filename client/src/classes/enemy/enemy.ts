@@ -20,7 +20,7 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
    public lookAt: LookAt = 'right';
    public isAlive = true;
    public speed: EnemySpeed;
-   public sword: Phaser.Physics.Arcade.Sprite;
+   public sword: Phaser.Physics.Arcade.Sprite & { damage?: number };
    public cursors: { [index: string]: Phaser.Input.Keyboard.Key };
    public animKeys: AnimKeys;
 
@@ -53,13 +53,14 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
       this.setCollideWorldBounds(true);
    }
 
-   public addSword(key: string) {
+   public addSword(key: string, damage: number) {
       this.sword = this.scene.physics.add.sprite(
          this.body.width, 500, key,
       )
          .setOrigin(0)
          .setVisible(false);
       this.sword.body.setSize(this.body.width, 10);
+      this.sword.damage = damage;
    }
 
    public animEndHandler(animation: Phaser.Animations.Animation) {
@@ -106,8 +107,8 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
          }
          this.isAttacking = false;
          playerBodyX < this.x
-            ? this.move('left', -this.speed.x * 2)
-            : this.move('right', this.speed.x * 2);
+            ? this.move('left', -this.speed.x * 2.3)
+            : this.move('right', this.speed.x * 2.3);
       }
    }
 

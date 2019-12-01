@@ -4,21 +4,22 @@ import '#/config/globals.sass';
 import { GameScene } from '#/scenes/gameScene';
 import { LoadingScene } from '#/scenes/loadingScene';
 import { MenuScene } from '#/scenes/menuScene';
+import { RestartScene } from '#/scenes/restartScene';
 import { UiScene } from '#/scenes/uiScene';
 
-class KacpGame extends Phaser.Game {
+class PlatformerGame extends Phaser.Game {
    constructor(config) {
       super(config);
    }
 }
 
 const config = {
-   title: 'KacpGame',
+   title: 'PlatformerGame',
    type: Phaser.AUTO,
    width: dimensions.width,
    height: dimensions.height,
    parent: 'game',
-   scene: [LoadingScene, MenuScene, GameScene, UiScene],
+   scene: [LoadingScene, MenuScene, GameScene, UiScene, RestartScene],
    render: {
       pixelArt: true,
    },
@@ -26,9 +27,11 @@ const config = {
       default: 'arcade',
       gravity: { y: 300 },
       arcade: {
-         debug: true,
+         // debug: true,
       },
    },
 };
 
-window.addEventListener('load', () => new KacpGame(config));
+let game: Phaser.Game;
+window.addEventListener('load', () => game = new PlatformerGame(config));
+export { game };

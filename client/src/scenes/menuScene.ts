@@ -1,3 +1,4 @@
+import { playerHearts } from '#/classes/player/constants';
 import { SceneNames } from '#/config/gameConfig';
 import * as Phaser from 'phaser';
 
@@ -6,10 +7,6 @@ export class MenuScene extends Phaser.Scene {
       super({
          key: SceneNames.Menu,
       });
-   }
-
-   public init(data) {
-
    }
 
    public create() {
@@ -23,7 +20,7 @@ export class MenuScene extends Phaser.Scene {
          font: '30px mainFont',
       };
 
-      const playGameText = this.add.text(0, -50, 'Play game', { ...fontStyles, fill: '#199ca6'});
+      const playGameText = this.add.text(0, -50, 'Play game', { ...fontStyles, fill: '#199ca6' });
       const texts = [
          { description: 'move left', key: '← left arrow' },
          { description: 'move right', key: '→ right arrow' },
@@ -40,7 +37,7 @@ export class MenuScene extends Phaser.Scene {
 
       playGameText.setInteractive();
       playGameText.on('pointerdown', () => {
-         this.scene.start(SceneNames.Game, { data: 'from menu' });
+         this.scene.start(SceneNames.Game, { lifeHearts: playerHearts });
          this.scene.start(SceneNames.Ui);
       });
    }

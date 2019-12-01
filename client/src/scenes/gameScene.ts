@@ -6,11 +6,11 @@ import { assets as playerAssets } from '#/classes/player/constants';
 import { Player } from '#/classes/player/player';
 import { dimensions, gameScale, SceneNames } from '#/config/gameConfig';
 import * as Phaser from 'phaser';
-import { assets } from './constants';
+import { assets, GameSceneState } from './constants';
 
 const { width: gameWidth, height: gameHeight } = dimensions;
 const { skeletonStandSprite, skeletonRunSprite, skeletonAttackSprite, skeletonDeadSprite } = skeletonAssets;
-const { playerAttackSprite, playerStandSprite, playerRunSprite, swordSprite } = playerAssets;
+const { playerAttackSprite, playerStandSprite, playerRunSprite, swordSprite, playerDeadSprite } = playerAssets;
 
 // this.player.alpha = .1 change alpha opacity
 export class GameScene extends Phaser.Scene {
@@ -18,9 +18,14 @@ export class GameScene extends Phaser.Scene {
    private skeletons: Phaser.Physics.Arcade.Group;
    private tileMap: Phaser.Tilemaps.Tilemap;
    private terrainLayer: Phaser.Tilemaps.StaticTilemapLayer;
+   private sceneState: GameSceneState;
 
    constructor() {
       super({ key: SceneNames.Game });
+   }
+
+   public init(state: GameSceneState) {
+      this.sceneState = state;
    }
 
    public preload() {
@@ -46,6 +51,14 @@ export class GameScene extends Phaser.Scene {
          {
             frameHeight: playerAttackSprite.frameHeight,
             frameWidth: playerAttackSprite.frameWidth,
+         },
+      );
+      this.load.spritesheet(
+         playerDeadSprite.name,
+         playerDeadSprite.data,
+         {
+            frameHeight: playerDeadSprite.frameHeight,
+            frameWidth: playerDeadSprite.frameWidth,
          },
       );
       this.load.spritesheet(
@@ -115,7 +128,8 @@ export class GameScene extends Phaser.Scene {
       this.player = new Player(
          this,
          20,
-         gameHeight - assets.tileBox.width * 2 + 20,
+         gameHeight - assets.tileBox.width * 2 + 40,
+         this.sceneState.lifeHearts,
          playerAssets.playerStandSprite.name,
       );
 
@@ -130,7 +144,7 @@ export class GameScene extends Phaser.Scene {
       this.skeletons.getChildren().forEach((skeleton) => skeleton.update());
    }
 
-   private onPlayerAttack() {
+   private onPlayerAttack() { // to fix
       let canAttack = true;
       return (sword: Phaser.Physics.Arcade.Sprite, enemy: Enemy) => {
          if (canAttack) {
