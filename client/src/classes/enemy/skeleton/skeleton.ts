@@ -94,7 +94,7 @@ export class Skeleton extends Enemy {
          repeat: -1,
       });
       this.scene.anims.create({
-         frameRate: 18,
+         frameRate: 25,
          frames: this.scene.anims.generateFrameNumbers(skeletonAttackSprite.name, { start: 0, end: 9 }),
          key: animKeys.attack,
          repeat: -1,

@@ -143,7 +143,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
    }
 
    private animFinishedHandler(animation: Phaser.Animations.Animation) {
-      this.isAttacking = false;
       if (animation.key === animKeys.attack) {
          this.isAttacking = false;
       }

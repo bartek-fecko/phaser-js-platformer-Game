@@ -6,6 +6,7 @@ import { LoadingScene } from '#/scenes/loadingScene';
 import { MenuScene } from '#/scenes/menuScene';
 import { RestartScene } from '#/scenes/restartScene';
 import { UiScene } from '#/scenes/uiScene';
+import { WinScene } from '#/scenes/WinScene';
 
 class PlatformerGame extends Phaser.Game {
    constructor(config) {
@@ -19,7 +20,7 @@ const config = {
    width: dimensions.width,
    height: dimensions.height,
    parent: 'game',
-   scene: [LoadingScene, MenuScene, GameScene, UiScene, RestartScene],
+   scene: [LoadingScene, MenuScene, GameScene, UiScene, RestartScene, WinScene],
    render: {
       pixelArt: true,
    },

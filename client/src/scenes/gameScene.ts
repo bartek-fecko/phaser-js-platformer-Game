@@ -14,6 +14,7 @@ const { playerAttackSprite, playerStandSprite, playerRunSprite, swordSprite, pla
 
 // this.player.alpha = .1 change alpha opacity
 export class GameScene extends Phaser.Scene {
+   public allEnemiesCounter: number;
    private player: Player;
    private skeletons: Phaser.Physics.Arcade.Group;
    private tileMap: Phaser.Tilemaps.Tilemap;
@@ -140,6 +141,9 @@ export class GameScene extends Phaser.Scene {
    }
 
    public update() {
+      if (this.allEnemiesCounter === 0) {
+         this.scene.start(SceneNames.Win);
+      }
       this.player.update();
       this.skeletons.getChildren().forEach((skeleton) => skeleton.update());
    }
@@ -188,6 +192,7 @@ export class GameScene extends Phaser.Scene {
 
    private createEnemies() {
       const enemiesTileObjects = this.tileMap.objects[0].objects as unknown as EnemyOptions[];
+      this.allEnemiesCounter = enemiesTileObjects.length;
       this.skeletons = this.physics.add.group({ immovable: true });
       enemiesTileObjects.forEach((enemyTileObject) => {
          this.skeletons.add(new Skeleton(this, enemyTileObject));

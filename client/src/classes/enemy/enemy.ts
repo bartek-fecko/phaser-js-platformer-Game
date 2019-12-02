@@ -2,6 +2,7 @@ import * as playerAssets from '#/classes/player/constants';
 import { LookAt } from '#/classes/player/constants';
 import { Player } from '#/classes/player/player';
 import { boxWidth, dimensions, gameScale } from '#/config/gameConfig';
+import { GameScene } from '#/scenes/gameScene';
 import * as Phaser from 'phaser';
 import {
    AnimKeys,
@@ -78,6 +79,7 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
          this.setOffset(0);
          this.setVelocityX(0);
          this.isAlive = false;
+         (this.scene as GameScene).allEnemiesCounter--;
          this.anims.play(this.animKeys.dead, false);
       }
    }

@@ -10,6 +10,7 @@ export enum SceneNames {
    Loading = 'Loading',
    Ui = 'Ui',
    Restart = 'Restart',
+   Win = 'Win',
 }
 
 export const gameScale = 2.075;
