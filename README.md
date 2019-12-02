@@ -1,3 +1,5 @@
 # js platformer game
 
-https://platformergame.herokuapp.com/
+preview: https://platformergame.herokuapp.com/
+
+platformer game created with phaser js libray. Still many things to do.
