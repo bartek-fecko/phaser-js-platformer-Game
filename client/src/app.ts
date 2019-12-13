@@ -14,7 +14,7 @@ class PlatformerGame extends Phaser.Game {
    }
 }
 
-const config = {
+const config: Phaser.Types.Core.GameConfig = {
    title: 'PlatformerGame',
    type: Phaser.AUTO,
    width: dimensions.width,
@@ -26,7 +26,6 @@ const config = {
    },
    physics: {
       default: 'arcade',
-      gravity: { y: 300 },
       arcade: {
          // debug: true,
       },

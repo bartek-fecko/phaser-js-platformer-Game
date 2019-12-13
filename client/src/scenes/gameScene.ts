@@ -6,6 +6,7 @@ import { assets as playerAssets } from '#/classes/player/constants';
 import { Player } from '#/classes/player/player';
 import { dimensions, gameScale, SceneNames } from '#/config/gameConfig';
 import * as Phaser from 'phaser';
+import { Weather } from './../classes/weather/weather';
 import { assets, GameSceneState } from './constants';
 
 const { width: gameWidth, height: gameHeight } = dimensions;
@@ -133,8 +134,10 @@ export class GameScene extends Phaser.Scene {
          this.sceneState.lifeHearts,
          playerAssets.playerStandSprite.name,
       );
-
       this.createEnemies();
+
+      const weather = new Weather(this, this.tileMap.widthInPixels * gameScale, gameHeight);
+      weather.addSnow();
 
       this.setCameraSettings();
       this.setPhysicsSettings();
@@ -170,6 +173,7 @@ export class GameScene extends Phaser.Scene {
    }
 
    private setPhysicsSettings() {
+      this.physics.world.setFPS(60);
       this.physics.world.setBounds(0, 0, this.tileMap.widthInPixels * 2, this.tileMap.heightInPixels * 2);
       this.terrainLayer.setCollisionByProperty({ collisions: true });
       this.physics.add.collider(this.player, this.terrainLayer);
@@ -186,7 +190,7 @@ export class GameScene extends Phaser.Scene {
 
    private setCameraSettings() {
       this.cameras.main.roundPixels = true;
-      this.cameras.main.setBounds(0, 0, this.tileMap.widthInPixels * 2, 0);
+      this.cameras.main.setBounds(0, 0, this.tileMap.widthInPixels * gameScale, 0);
       this.cameras.main.startFollow(this.player);
    }
 
